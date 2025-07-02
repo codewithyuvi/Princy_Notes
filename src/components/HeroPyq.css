@@ -1,0 +1,58 @@
+.notes-section {
+  padding: 60px 20px;
+  background: linear-gradient(to bottom right, #f9fbfd, #eef2f7);
+  background-image: radial-gradient(circle, #e0e0e0 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.notes-heading {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 40px;
+  color: #222;
+  font-weight: 700;
+}
+
+.notes-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 60px;
+}
+
+.ROW {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.box {
+  width: 260px; /* increased from 220px */
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 24px 18px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.box:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+.dotlottie-player {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 12px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box p {
+  font-size: 17px;
+  font-weight: 600;
+  color: #222;
+}
