@@ -7,7 +7,7 @@ const Footer = () => {
     <footer className="footer-container">
       <div className="footer-content">
         <div className="footer-section about">
-          <h3>Princy Notes</h3>
+          <h3>Princy Bansal</h3>
           <p>
             Your trusted partner for easy access to PYQs, notes, and syllabus.  
             Study smart, score high!
@@ -45,7 +45,7 @@ const Footer = () => {
 
       <div className="footer-bottom">
         <p>
-          © 2025 Princy Notes. Made with ❤️ for students. <br />
+          © 2025 Edu Pro. Made with ❤️ for students. <br />
           Developed by{" "}
           <a
             href="https://www.linkedin.com/in/yuvrajbansal"
