@@ -76,7 +76,7 @@ function Header() {
       <div className="container-fluid" >
         {/* Logo */}
         <a className="navbar-brand fw-bold text-primary" href="/">
-          Princy Notes
+          Edu Pro
         </a>
 
         {/* Toggle button for mobile view */}
