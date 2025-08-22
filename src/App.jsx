@@ -6,6 +6,7 @@ import UnitList from "./components/UnitList";
 import HomePage from "./components/HomePage";
 import PdfViewer from "./components/PdfViewer";
 import Footer from "./components/Footer";
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
       <Footer />
       
       
-      
+      <Analytics />
     </Router>
   );
 }
