@@ -12,11 +12,11 @@ function App() {
     <Router>
       <Header />
       <Routes>
-         <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/notes/:subjectId" element={<UnitList />} />
-         <Route path="/pdf-viewer" element={<PdfViewer />} />
+        <Route path="/pdf-viewer" element={<PdfViewer />} />
          
-
+      
       </Routes>
 
       <Footer />
