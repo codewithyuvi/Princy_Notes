@@ -7,6 +7,7 @@ import HomePage from "./components/HomePage";
 import PdfViewer from "./components/PdfViewer";
 import Footer from "./components/Footer";
 import { Analytics } from '@vercel/analytics/react';
+import AdminPortal from "./adminPortalComponents/AdminPortal.jsx";
 
 function App() {
   return (
@@ -16,8 +17,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/notes/:subjectId" element={<UnitList />} />
         <Route path="/pdf-viewer" element={<PdfViewer />} />
+        <Route path="/Admin-Portal/*" element={<AdminPortal />} />
          
-      
       </Routes>
 
       <Footer />

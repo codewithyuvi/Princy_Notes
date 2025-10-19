@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { supabase } from "./supabaseClient.js";
 import "./Header.css";
+import Sidebar from "../adminPortalComponents/Sidebar.jsx";
 
 function Header() {
   const navigate = useNavigate();
@@ -210,6 +211,7 @@ function Header() {
             </li>
           </ul>
 
+          <a onClick={() => navigate("/Admin-Portal")}>Admin Portal</a>
           
         </div>
       </div>
