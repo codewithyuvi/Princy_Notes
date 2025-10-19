@@ -13,7 +13,7 @@ function AddNewSubject() {
   const fetchSubjects = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8000/api/v1/admin/getSubjects"
+        `${import.meta.env.VITE_BACKEND_URL}/admin/getSubjects`
       );
       setSubjects(res.data.data);
     } catch (err) {
@@ -26,7 +26,7 @@ function AddNewSubject() {
     e.preventDefault(); // prevents reloading
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/admin/createSubject",
+        `${import.meta.env.VITE_BACKEND_URL}/admin/createSubject`,
         {
           subjectName: subject,
         }
