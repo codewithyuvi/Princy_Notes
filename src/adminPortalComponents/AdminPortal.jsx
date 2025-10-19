@@ -10,10 +10,10 @@ function AdminPortal(){
 
     return (
         <div>
-            <h1>Admin Portal</h1>    
+            {/* <h1>Admin Portal</h1>     */}
             <Sidebar/>   
             <Routes>
-                <Route path="/" element={<p>Select an option from the sidebar</p>}></Route>
+                <Route path="/" element={<p className="d-inline-flex">Select an option from the sidebar</p>}></Route>
                 <Route path="addNewSubject" element={<AddNewSubject/>} />
                 <Route path="uploadPdf" element={<UploadPdf/>} />
                 <Route path="all-pyqs" element={<AllPyq/>} />
