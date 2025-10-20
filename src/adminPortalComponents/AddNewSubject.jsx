@@ -7,7 +7,7 @@ function AddNewSubject() {
   const [subjects, setSubjects] = useState([]);
 
   useEffect(() => {
-    fetchSubjects();
+    fetchSubjects(); 
   }, []);
 
   const fetchSubjects = async () => {

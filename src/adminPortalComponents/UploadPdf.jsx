@@ -1,15 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 function UploadPdf() {
   const [showNotesInput, setShowNotesInput] = useState(false);
     const [message, setMessage] = useState("");
+    const [subjects, setSubjects] = useState([]);
 
   function checkType(e) {
     const selected = e.target.value;
     setShowNotesInput(selected === "notes");
   }
 
+  useEffect(() => {
+    fetchSubjects()
+  }, [])
+
+  async function fetchSubjects(){
+    try{
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/admin/getSubjects`)
+        console.log(res.data.data);
+        setSubjects(res.data.data);
+        // for(let i=0; i<res.data.data.length; i++){
+
+        // }
+    } catch(err){
+        if(err.response && err.response.data){
+            setMessage(err.response.data.message || "Something went")
+        }
+        else{
+            setMessage("error")
+        }
+    }
+
+  }
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -31,7 +54,7 @@ function UploadPdf() {
             }
         )
         setShowNotesInput(false);
-        console.log(res.data);
+        // console.log(res.data);
         setMessage(e.target.fileName.value + " " + res.data.message);
     } catch(err){
         if(err.response && err.response.data){
@@ -42,8 +65,6 @@ function UploadPdf() {
         }
     }
   }
-
-
 
   return (
     <div className="d-inline-flex flex-column">
@@ -91,9 +112,10 @@ function UploadPdf() {
             </label>
             <select name="subjectId">
               <option value="">Select the Subject</option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
+              { subjects.length > 0 ? 
+                    subjects.map((i,n) => <option key={n} value={i._id} >{i.subjectName}</option>)
+                : <option value="">No Subject Found</option>}
+    
             </select>
           </div>
 
