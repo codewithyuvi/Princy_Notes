@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useAnimation } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { Book } from "lucide-react";
 
 
