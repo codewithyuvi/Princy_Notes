@@ -34,7 +34,7 @@ function AllSyllabus() {
 
   return (
     <div className="d-inline-flex flex-column">
-      <h1>i am syllabus</h1>
+      <h1>All Uploaded Syllabus PDF's</h1>
       <ol>
         {syllabus.length > 0 ? (
           syllabus.map((i, n) => (

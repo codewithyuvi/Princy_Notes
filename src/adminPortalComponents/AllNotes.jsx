@@ -15,9 +15,10 @@ function AllNotes() {
 
   useEffect(() => {
     fetchUnits();
-  });
+  }, [selectedSubjectId]);
 
   async function fetchSubject() {
+    
     try {
       const queryParams = {
         type: "notes",
@@ -44,6 +45,7 @@ function AllNotes() {
   }
 
   async function fetchUnits() {
+    if (!selectedSubjectId) return; // Safeguard
     try {
       const queryParams = {
         subjectId: selectedSubjectId,
@@ -95,7 +97,9 @@ function AllNotes() {
         </ol>
       )}
 
-      {message && <p>{message}</p>}
+      {/* {message && <p>{message}</p>} */}
+     { console.log(message)}
+      
     </div>
   );
 }
