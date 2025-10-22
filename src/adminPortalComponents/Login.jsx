@@ -60,7 +60,7 @@ const Login = () => {
     return (
       <div>
         <div>
-          <h2>You are already logged in</h2>
+          <h2>Admin logged in</h2>
         </div>
       </div>
     );
