@@ -1,8 +1,11 @@
 .unitlist-container {
-  padding: 40px 20px;
+  min-height: calc(100vh - 100px); 
+  padding-bottom: 50px;
+  box-sizing: border-box;
+
+
   text-align: center;
   background-color: #f4f4f4;
-  height: 100vh;
 }
 
 .notes-heading {
@@ -61,4 +64,15 @@
   .note-title {
     font-size: 14px;
   }
+}
+
+.subject-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.subject-card:hover,
+.subject-card:focus {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  outline: none;
 }

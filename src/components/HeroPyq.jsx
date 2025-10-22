@@ -3,42 +3,51 @@ import "./HeroNotes.css"; // Reuse same CSS if layout is same
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { supabase } from "./supabaseClient"; // Make sure the path is correct
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const HeroPyq = () => {
-  const [latestPyqs, setLatestPyqs] = useState([]);
   const navigate = useNavigate();
+
+  const [pyqs, setPyqs] = useState([]);
+  const [message, setMessage] = useState();
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
-
-    const fetchLatestPyqs = async () => {
-      const { data, error } = await supabase
-        .from("princy_pyq_syllabus")
-        .select("*")
-        .eq("type", "pyq")
-        .order("created_at", { ascending: false })
-        .limit(5);
-
-      if (error) {
-        console.error("Error fetching latest PYQs:", error);
-      } else {
-        setLatestPyqs(data);
-      }
-    };
-
-    fetchLatestPyqs();
+    fetchPyq();
   }, []);
+
+  async function fetchPyq() {
+    try {
+      const queryParams = {
+        type: "pyq",
+      };
+      // console.log(queryParams);
+
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/getType`,
+        { params: queryParams }
+      );
+      // console.log(res.data.data);
+
+      setPyqs(res.data.data);
+    } catch (err) {
+      if (err.response && err.response.data) {
+        setMessage(err.response.data.message || "can't GET");
+      } else {
+        setMessage("error");
+      }
+    }
+  }
 
   return (
     <div className="notes-section">
       <h1 className="notes-heading">PYQ's</h1>
       <div className="notes-wrapper">
         <div className="ROW top-ROW">
-          {latestPyqs.slice(0, 3).map((pyq) => (
+          {pyqs.slice(0, 3).map((pyq) => (
             <div
-              key={pyq.id}
+              key={pyq._id}
               className="box"
               data-aos="fade-up"
               style={{ cursor: "pointer" }}
@@ -51,14 +60,14 @@ const HeroPyq = () => {
                   autoplay
                 />
               </div>
-              <p>{pyq.pdf_name}</p>
+              <p>{pyq.fileName}</p>
             </div>
           ))}
         </div>
         <div className="ROW bottom-ROW">
-          {latestPyqs.slice(3, 5).map((pyq) => (
+          {pyqs.slice(3, 5).map((pyq) => (
             <div
-              key={pyq.id}
+              key={pyq._id}
               className="box"
               data-aos="fade-up"
               style={{ cursor: "pointer" }}
@@ -71,11 +80,12 @@ const HeroPyq = () => {
                   autoplay
                 />
               </div>
-              <p>{pyq.pdf_name}</p>
+              <p>{pyq.fileName}</p>
             </div>
           ))}
         </div>
       </div>
+      {message && <p>{message}</p>}
     </div>
   );
 };

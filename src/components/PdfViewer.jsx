@@ -19,7 +19,7 @@ function PdfViewer() {
   const lastPinchDist = useRef(null);
   const viewerRef = useRef(null);
 
-  const pdfUrl = pdf_data?.pdf_url;
+const pdfUrl = pdf_data?.fileUrl || pdf_data?.fileName;
 
   useEffect(() => {
     if (!pdfUrl) {
