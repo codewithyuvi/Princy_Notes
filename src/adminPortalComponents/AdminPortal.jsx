@@ -12,7 +12,7 @@ function AdminPortal(){
   const { authenticated } = useContext(AuthContext);
       if(authenticated){
     return (
-        <div>
+        <div className="d-flex">
             {/* <h1>Admin Portal</h1>     */}
             <Sidebar/>   
             <Routes>

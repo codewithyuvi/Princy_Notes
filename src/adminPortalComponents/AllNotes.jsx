@@ -68,6 +68,7 @@ function AllNotes() {
   return (
     <div className="d-inline-flex flex-column">
       <h1>Notes</h1>
+      <h3>Select Subject</h3>
       {selectedSubjectId ? (
         <ol>
           All units for {selectedSubjectName}
@@ -87,7 +88,7 @@ function AllNotes() {
         <ol>
           {subjects.length > 0 ? (
             subjects.map((i, n) => (
-              <li key={n} onClick={() => selectedSubject(i)}>
+              <li key={n} style={{cursor: 'pointer'}} onClick={() => selectedSubject(i)}>
                 {i.subjectName}
               </li>
             ))
