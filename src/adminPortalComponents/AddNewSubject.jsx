@@ -5,9 +5,8 @@ function AddNewSubject() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [subjects, setSubjects] = useState([]);
-
   useEffect(() => {
-    fetchSubjects(); 
+    fetchSubjects();
   }, []);
 
   const fetchSubjects = async () => {
@@ -29,18 +28,18 @@ function AddNewSubject() {
         `${import.meta.env.VITE_BACKEND_URL}/admin/createSubject`,
         {
           subjectName: subject,
-        }
+        },
+        { withCredentials: true }
       );
       setMessage(res.data.message);
       setSubject("");
       fetchSubjects(); // refresh list
     } catch (err) {
-        if(err.response && err.response.data){
-            setMessage(err.response.data.message || "Something went ");  
-        }
-        else{
-            setMessage("erorr")
-        }
+      if (err.response && err.response.data) {
+        setMessage(err.response.data.message || "Something went ");
+      } else {
+        setMessage("erorr");
+      }
     }
   };
 

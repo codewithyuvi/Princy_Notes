@@ -1,13 +1,90 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { supabase } from "./supabaseClient.js";
 import "./Header.css";
-import Sidebar from "../adminPortalComponents/Sidebar.jsx";
+import { AuthContext } from "../AuthContext.jsx";
+import axios from "axios";
 
 function Header() {
   const navigate = useNavigate();
+  const { setAuthenticated } = useContext(AuthContext);
+  const { authenticated } = useContext(AuthContext);
+
+  async function handleLogout() {
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/logout`,
+        {},
+        { withCredentials: true }
+      );
+
+      // Update auth state
+      setAuthenticated(false);
+
+      // Redirect to login or home page
+      {
+        authenticated ? (
+          <div className="d-flex gap-3 align-items-center">
+            <button
+              type="button"
+              className="btn btn-outline-primary"
+              onClick={() => navigate("/Admin-Portal")}
+            >
+              Admin Portal
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-danger"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => navigate("/Login")}
+          >
+            Login
+          </button>
+        );
+      }
+      {
+        authenticated ? (
+          <div className="d-flex gap-3 align-items-center">
+            <button
+              type="button"
+              className="btn btn-outline-primary"
+              onClick={() => navigate("/Admin-Portal")}
+            >
+              Admin Portal
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-danger"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => navigate("/Login")}
+          >
+            Login
+          </button>
+        );
+      }
+    } catch (err) {
+      console.error("Logout failed", err);
+      // You can show a message if needed
+    }
+  }
 
   //fetching PYQ Subject Names
   const [pyqSubject, setPYQSubject] = useState([]);
@@ -71,10 +148,11 @@ function Header() {
   }, []);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light border-bottom"
-      style={{backgroundColor : "#5fc4e7"}}
+    <nav
+      className="navbar navbar-expand-lg navbar-light bg-light border-bottom"
+      style={{ backgroundColor: "#5fc4e7" }}
     >
-      <div className="container-fluid" >
+      <div className="container-fluid">
         {/* Logo */}
         <a className="navbar-brand fw-bold text-primary" href="/">
           Edu Pro
@@ -211,8 +289,32 @@ function Header() {
             </li>
           </ul>
 
-          <a onClick={() => navigate("/Admin-Portal")}>Admin Portal</a>
-          
+          {authenticated ? (
+            <div className="d-flex gap-3 align-items-center">
+              <button
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={() => navigate("/Admin-Portal")}
+              >
+                Admin Portal
+              </button>
+              <button
+                type="button"
+                className="btn btn-outline-danger"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => navigate("/Login")}
+            >
+              Admin Login
+            </button>
+          )}
         </div>
       </div>
     </nav>

@@ -3,8 +3,8 @@ import axios from "axios";
 
 function UploadPdf() {
   const [showNotesInput, setShowNotesInput] = useState(false);
-    const [message, setMessage] = useState("");
-    const [subjects, setSubjects] = useState([]);
+  const [message, setMessage] = useState("");
+  const [subjects, setSubjects] = useState([]);
 
   function checkType(e) {
     const selected = e.target.value;
@@ -12,26 +12,26 @@ function UploadPdf() {
   }
 
   useEffect(() => {
-    fetchSubjects()
-  }, [])
+    fetchSubjects();
+  }, []);
 
-  async function fetchSubjects(){
-    try{
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/admin/getSubjects`)
-        console.log(res.data.data);
-        setSubjects(res.data.data);
-        // for(let i=0; i<res.data.data.length; i++){
+  async function fetchSubjects() {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/getSubjects`
+      );
+      console.log(res.data.data);
+      setSubjects(res.data.data);
+      // for(let i=0; i<res.data.data.length; i++){
 
-        // }
-    } catch(err){
-        if(err.response && err.response.data){
-            setMessage(err.response.data.message || "Something went")
-        }
-        else{
-            setMessage("error")
-        }
+      // }
+    } catch (err) {
+      if (err.response && err.response.data) {
+        setMessage(err.response.data.message || "Something went");
+      } else {
+        setMessage("error");
+      }
     }
-
   }
   async function handleSubmit(e) {
     e.preventDefault();
@@ -41,28 +41,29 @@ function UploadPdf() {
     formData.append("fileType", e.target.type.value);
     formData.append("fileUrl", e.target.pdf.files[0]);
 
-    if(e.target.type.value === "notes"){
-        formData.append("unitName", e.target.unitName.value);
-        formData.append("subjectId", e.target.subjectId.value);
+    if (e.target.type.value === "notes") {
+      formData.append("unitName", e.target.unitName.value);
+      formData.append("subjectId", e.target.subjectId.value);
     }
 
-    try{
-        const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/admin/uploadFile`, 
-            formData,
-            {
-                headers: { "Content-Type": "multipart/form-data" }
-            }
-        )
-        setShowNotesInput(false);
-        // console.log(res.data);
-        setMessage(e.target.fileName.value + " " + res.data.message);
-    } catch(err){
-        if(err.response && err.response.data){
-            setMessage(err.response.data.message || "Kismat Kharab")
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/uploadFile`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
         }
-        else{
-            setMessage("err")
-        }
+      );
+      setShowNotesInput(false);
+      // console.log(res.data);
+      setMessage(e.target.fileName.value + " " + res.data.message);
+    } catch (err) {
+      if (err.response && err.response.data) {
+        setMessage(err.response.data.message || "Kismat Kharab");
+      } else {
+        setMessage("err");
+      }
     }
   }
 
@@ -87,42 +88,55 @@ function UploadPdf() {
             Select Type of Pdf
           </label>
 
-          
-            <select name="type" className="selectType" onChange={checkType} required>
-              <option value="">Please choose the Type of PDF</option>
-              <option value="notes">Notes</option>
-              <option value="pyq">PYQ</option>
-              <option value="syllabus">Syllabus</option>
-            </select>
-        
-    {showNotesInput && (
-          <div className="notesInputs">
-            <label htmlFor="type" className="d-flex">
-              Enter Unit Name
-            </label>
-            <input
-              type="text"
-              name="unitName"
-              className="form-control mb-3"
-              placeholder="Enter the Unit Name"
-            />
+          <select
+            name="type"
+            className="selectType"
+            onChange={checkType}
+            required
+          >
+            <option value="">Please choose the Type of PDF</option>
+            <option value="notes">Notes</option>
+            <option value="pyq">PYQ</option>
+            <option value="syllabus">Syllabus</option>
+          </select>
 
-            <label htmlFor="subjectId">
-              Select the Subject in which you want to upload pdf
-            </label>
-            <select name="subjectId">
-              <option value="">Select the Subject</option>
-              { subjects.length > 0 ? 
-                    subjects.map((i,n) => <option key={n} value={i._id} >{i.subjectName}</option>)
-                : <option value="">No Subject Found</option>}
-    
-            </select>
-          </div>
+          {showNotesInput && (
+            <div className="notesInputs">
+              <label htmlFor="type" className="d-flex">
+                Enter Unit Name
+              </label>
+              <input
+                type="text"
+                name="unitName"
+                className="form-control mb-3"
+                placeholder="Enter the Unit Name"
+              />
 
-    )}
+              <label htmlFor="subjectId">
+                Select the Subject in which you want to upload pdf
+              </label>
+              <select name="subjectId">
+                <option value="">Select the Subject</option>
+                {subjects.length > 0 ? (
+                  subjects.map((i, n) => (
+                    <option key={n} value={i._id}>
+                      {i.subjectName}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">No Subject Found</option>
+                )}
+              </select>
+            </div>
+          )}
           <input type="file" name="pdf" accept=".pdf" className="d-flex" />
 
-          <input className="btn btn-primary" type="submit" value="Submit" required/>
+          <input
+            className="btn btn-primary"
+            type="submit"
+            value="Submit"
+            required
+          />
         </div>
       </form>
       {message && <p>{message}</p>}
