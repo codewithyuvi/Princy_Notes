@@ -3,42 +3,50 @@ import "./HeroNotes.css";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { supabase } from "./supabaseClient"; // <-- make sure path is correct
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const HeroNotes = () => {
-  const [latestNotes, setLatestNotes] = useState([]);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    AOS.init({ duration: 1000 });
-
-    const fetchLatestNotes = async () => {
-      const { data, error } = await supabase
-        .from("princy_notes")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(5);
-
-      if (error) {
-        console.error("Error fetching latest notes:", error);
-      } else {
-        setLatestNotes(data);
+    const navigate = useNavigate();
+  const [notes, setNotes] = useState([]);
+      const [message, setMessage] = useState();
+  
+    useEffect(() => {
+      AOS.init({ duration: 1000 });
+      fetchNotes();
+    }, []);
+  
+    async function fetchNotes() {
+      try {
+        const queryParams = {
+          subjectId: "68f9cb60f6c4c6f5b8b50a18",
+        };
+        // console.log(queryParams);
+  
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/admin/subject`,
+          { params: queryParams }
+        );
+        // console.log(res.data.data);
+  
+        setNotes(res.data.data);
+      } catch (err) {
+        if (err.response && err.response.data) {
+          setMessage(err.response.data.message || "can't GET");
+        } else {
+          setMessage("error");
+        }
       }
-    };
-
-    fetchLatestNotes();
-  }, []);
-
+    }
   return (
     <div className="notes-section" id="notes-section">
       <h1 className="notes-heading">Notes</h1>
       <div className="notes-wrapper">
         <div className="ROW top-ROW" style={{cursor: "pointer"}}>
-          {latestNotes.slice(0, 3).map((note) => (
+          {notes.slice(0, 3).map((note) => (
             <div
               className="box"
-              key={note.id}
+              key={note._id}
               data-aos="fade-up"
               onClick={() => navigate("/pdf-viewer", { state: note })}
             >
@@ -49,15 +57,15 @@ const HeroNotes = () => {
                   autoplay
                 />
               </div>
-              <p>{note.pdf_name}</p>
+              <p>{note.fileName}</p>
             </div>
           ))}
         </div>
         <div className="ROW bottom-ROW" style={{cursor: "pointer"}}>
-          {latestNotes.slice(3, 5).map((note) => (
+          {notes.slice(3, 5).map((note) => (
             <div
               className="box"
-              key={note.id}
+              key={note._id}
               data-aos="fade-up"
               onClick={() => navigate("/pdf-viewer", { state: note })}
             >
@@ -68,11 +76,12 @@ const HeroNotes = () => {
                   autoplay
                 />
               </div>
-              <p>{note.pdf_name}</p>
+              <p>{note.fileName}</p>
             </div>
           ))}
         </div>
       </div>
+      {message && <p>{message}</p>}
     </div>
   );
 };

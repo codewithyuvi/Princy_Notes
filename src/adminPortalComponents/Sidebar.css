@@ -1,0 +1,22 @@
+.sidebar-g-container{
+    height: 75vh;
+}
+
+
+.sidebar-button-parent{
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.sidebar-button{
+    display: inline;
+    background: #2c65d8;
+    margin-top: 5px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.sidebar-button a{
+    color: white;
+    text-decoration: none;
+}

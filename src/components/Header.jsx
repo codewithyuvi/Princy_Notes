@@ -1,85 +1,190 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import { supabase } from "./supabaseClient.js";
 import "./Header.css";
+import { AuthContext } from "../AuthContext.jsx";
+import axios from "axios";
 
 function Header() {
   const navigate = useNavigate();
+  const { setAuthenticated } = useContext(AuthContext);
+  const { authenticated } = useContext(AuthContext);
 
-  //fetching PYQ Subject Names
-  const [pyqSubject, setPYQSubject] = useState([]);
-  useEffect(() => {
-    const fetchPYQSubjects = async () => {
-      const { data, error } = await supabase
-        .from("princy_pyq_syllabus")
-        .select("*")
-        .eq("type", "pyq");
+  async function handleLogout() {
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/logout`,
+        {},
+        { withCredentials: true }
+      );
 
-      if (error) {
-        console.error("Error fetching PYQSubject: ", error);
-      } else {
-        setPYQSubject(data);
+      // Update auth state
+      setAuthenticated(false);
+
+      // Redirect to login or home page
+      {
+        authenticated ? (
+          <div className="d-flex gap-3 align-items-center">
+            <button
+              type="button"
+              className="btn btn-outline-primary"
+              onClick={() => navigate("/Admin-Portal")}
+            >
+              Admin Portal
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-danger"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => navigate("/Login")}
+          >
+            Login
+          </button>
+        );
       }
-    };
+      {
+        authenticated ? (
+          <div className="d-flex gap-3 align-items-center">
+            <button
+              type="button"
+              className="btn btn-outline-primary"
+              onClick={() => navigate("/Admin-Portal")}
+            >
+              Admin Portal
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-danger"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => navigate("/Login")}
+          >
+            Login
+          </button>
+        );
+      }
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  }
 
-    fetchPYQSubjects();
+  const [pyqs, setPyqs] = useState([]);
+  const [message, setMessage] = useState();
+
+  useEffect(() => {
+    fetchPyq();
   }, []);
+
+  async function fetchPyq() {
+    try {
+      const queryParams = {
+        type: "pyq",
+      };
+      // console.log(queryParams);
+
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/getType`,
+        { params: queryParams }
+      );
+      // console.log(res.data.data);
+
+      setPyqs(res.data.data);
+    } catch (err) {
+      if (err.response && err.response.data) {
+        setMessage(err.response.data.message || "can't GET");
+      } else {
+        setMessage("error");
+      }
+    }
+  }
 
   //  console.log(pyqSubject.map((item) => item.pdf_url));
-
-  const [notesSubject, setNotesSubject] = useState([]);
+  const [subjects, getSubjects] = useState([]);
 
   useEffect(() => {
-    const fetchNotesSubjects = async () => {
-      const { data, error } = await supabase
-        .from("princy_pyq_syllabus")
-        .select("*")
-        .eq("type", "notes");
-
-      if (error) {
-        console.error("Error fetching PYQSubject: ", error);
-      } else {
-        setNotesSubject(data);
-      }
-    };
-
-    fetchNotesSubjects();
+    fetchSubject();
   }, []);
+
+  async function fetchSubject() {
+    try {
+      const queryParams = {
+        type: "notes",
+      };
+
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/getType`,
+        { params: queryParams }
+      );
+      getSubjects(res.data.data);
+      // console.log(res.data.data);
+    } catch (err) {
+      if (err.response && err.response.data) {
+        setMessage(err.response.data.message || "Something went");
+      } else {
+        setMessage("error");
+      }
+    }
+  }
 
   // console.log(notesSubject.map((item) => item.pdf_url));
 
   //fetching Syllabus
-  const [semSyllabus, setsemSyllabus] = useState([]);
+  const [syllabus, setSyllabus] = useState([]);
+
   useEffect(() => {
-    const fetchSemSyllabus = async () => {
-      const { data, error } = await supabase
-        .from("princy_pyq_syllabus")
-        .select("*")
-        .eq("type", "syllabus");
-
-      if (error) {
-        console.error("Error fetching PYQSubject: ", error);
-      } else {
-        setsemSyllabus(data);
-      }
-    };
-
-    fetchSemSyllabus();
+    fetchSyllabus();
   }, []);
 
+  async function fetchSyllabus() {
+    try {
+      const queryParams = {
+        type: "syllabus",
+      };
+      // console.log(queryParams);
+
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/getType`,
+        { params: queryParams }
+      );
+      // console.log(res.data.data);
+
+      setSyllabus(res.data.data);
+    } catch (err) {
+      if (err.response && err.response.data) {
+        setMessage(err.response.data.message || "can't GET");
+      } else {
+        setMessage("error");
+      }
+    }
+  }
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light border-bottom"
-      style={{backgroundColor : "#5fc4e7"}}
+    <nav
+      className="navbar navbar-expand-lg navbar-light bg-light border-bottom"
+      style={{ backgroundColor: "#5fc4e7" }}
     >
-      <div className="container-fluid" >
+      <div className="container-fluid">
         {/* Logo */}
         <a className="navbar-brand fw-bold text-primary" href="/">
           Edu Pro
         </a>
 
-        {/* Toggle button for mobile view */}
         <button
           className="navbar-toggler"
           type="button"
@@ -110,21 +215,21 @@ function Header() {
                       Choose Subject
                     </h6>
 
-                    {pyqSubject.map((pyqSubjectName) => (
+                    {pyqs.map((i, n) => (
                       <a
-                        key={pyqSubjectName.id}
+                        key={i._id}
                         className="dropdown-item"
                         href="#"
                         onClick={(e) => {
-                          e.preventDefault(); // 🛑 prevent anchor default reload
-                          if (!pyqSubjectName.pdf_url) {
+                          e.preventDefault();
+                          if (!i.fileName) {
                             alert("No PDF URL found for this subject.");
                             return;
                           }
-                          navigate("/pdf-viewer", { state: pyqSubjectName });
+                          navigate("/pdf-viewer", { state: i });
                         }}
                       >
-                        {pyqSubjectName.subject}
+                        {i.fileName}
                       </a>
                     ))}
                   </div>
@@ -138,34 +243,10 @@ function Header() {
                 href="#"
                 role="button"
                 data-bs-toggle="dropdown"
+                onClick={() => navigate(`/notes/0}`)}
               >
                 Notes
               </a>
-              <div className="dropdown-menu p-4" style={{ width: "300px" }}>
-                <div className="row">
-                  {/* Subject */}
-                  <div>
-                    <h6 className="dropdown-header border-bottom">
-                      Choose Subject
-                    </h6>
-
-                    {notesSubject.map((notesSubjectName) => (
-                      <a
-                        key={notesSubjectName.id}
-                        className="dropdown-item"
-                        href="#"
-                        onClick={() =>
-                          navigate(
-                            `/notes/${encodeURIComponent(notesSubjectName.id)}`
-                          )
-                        }
-                      >
-                        {notesSubjectName.subject}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div>
             </li>
 
             <li className="nav-item dropdown">
@@ -185,23 +266,23 @@ function Header() {
                       Choose Semester
                     </h6>
 
-                    {semSyllabus.map((semSyllabusYear) => (
+                    {syllabus.map((i, n) => (
                       <a
-                        key={semSyllabusYear.id}
+                        key={i._id}
                         href="#"
                         className="dropdown-item"
                         onClick={(e) => {
                           e.preventDefault();
 
-                          if (!semSyllabusYear.pdf_url) {
+                          if (!i.fileUrl) {
                             alert("No syllabus PDF found for this semester.");
                             return;
                           }
 
-                          navigate("/pdf-viewer", { state: semSyllabusYear });
+                          navigate("/pdf-viewer", { state: i });
                         }}
                       >
-                        {semSyllabusYear.subject}
+                        {i.fileName}
                       </a>
                     ))}
                   </div>
@@ -210,9 +291,35 @@ function Header() {
             </li>
           </ul>
 
-          
+          {authenticated ? (
+            <div className="d-flex gap-3 align-items-center">
+              <button
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={() => navigate("/Admin-Portal")}
+              >
+                Admin Portal
+              </button>
+              <button
+                type="button"
+                className="btn btn-outline-danger"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => navigate("/Login")}
+            >
+              Admin Login
+            </button>
+          )}
         </div>
       </div>
+      {message && <p>{message}</p>}
     </nav>
   );
 }
