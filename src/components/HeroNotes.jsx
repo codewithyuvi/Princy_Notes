@@ -19,7 +19,7 @@ const HeroNotes = () => {
     async function fetchNotes() {
       try {
         const queryParams = {
-          subjectId: "68f9cb60f6c4c6f5b8b50a18",
+          subjectId: "68fa0c10b98e2e8c0263bbc2",
         };
         // console.log(queryParams);
   
